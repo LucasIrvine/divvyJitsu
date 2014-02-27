@@ -1,5 +1,6 @@
 $('document').ready(function(){
-	//api key  -->   22458d368bc748b899eaa829e55849e0
+	//api key : 22458d368bc748b899eaa829e55849e0
+	//divvy json : http://www.divvybikes.com/stations/json
 
 	jitsu = {
 		init : function(){
@@ -18,30 +19,14 @@ $('document').ready(function(){
 		},
 
 		drawMap : function(self, divvyJSON){
-			var map = L.map('map').setView([41.8819, -87.6278], 15);
+			self.map = L.map('map').setView([41.8819, -87.6278], 15);
 
 			L.tileLayer('http://b.tile.cloudmade.com/22458d368bc748b899eaa829e55849e0/1913/256//{z}/{x}/{y}.png', {
 				attribution: '',
 				maxZoom: 18
-			}).addTo(map);
+			}).addTo(self.map);
 
-			$.each(divvyJSON, function(i){
-				var lat = divvyJSON[i].latitude,
-					longit = divvyJSON[i].longitude,
-					stationName = divvyJSON[i].stationName;
-				
-				var marker = L.marker([lat, longit]).addTo(map);
-
-				marker.bindPopup(stationName);
-
-				marker.on('click', function(e){
-					marker.openPopup();
-				});
-
-				
-
-				
-			});
+			self.addStationMarkers(self, divvyJSON);
 
 		},
 
@@ -50,38 +35,22 @@ $('document').ready(function(){
 				var lat = divvyJSON[i].latitude,
 					longit = divvyJSON[i].longitude,
 					stationName = divvyJSON[i].stationName;
-				
-				var marker = L.marker([lat, longit]).addTo(map);
+				var marker = L.marker([lat, longit]).addTo(self.map);
+				// add the on click station names
+				self.addMarkerPopups(self, marker, stationName);
+			});
+		},
+
+		addMarkerPopups : function(self, marker, stationName){
+			//bind pop up
+			marker.bindPopup(stationName);
+			// add event handler
+			marker.on('click', function(e){
+				marker.openPopup();
 			});
 		}
-
 	};
 
 	jitsu.init();
-
-
-/*
-
-	var divvyJSON;
-
-	var map = L.map('map').setView([41.8819, -87.6278], 15);
-
-	L.tileLayer('http://b.tile.cloudmade.com/22458d368bc748b899eaa829e55849e0/1913/256//{z}/{x}/{y}.png', {
-		attribution: '',
-		maxZoom: 18
-	}).addTo(map);
-
-	map.on('click', function(e){
-		console.log(e.latlng);
-	});
-
-	var marker = L.marker([41.8817, -87.6279]).addTo(map);
-
-	$.getJSON('js/divvy.json', function(data){
-		divvyJSON = data.stationBeanList;
-	});
-
-	console.log(divvyJSON);
-*/
 
 });
