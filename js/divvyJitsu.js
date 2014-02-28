@@ -19,11 +19,23 @@ $('document').ready(function(){
 		},
 
 		drawMap : function(self, divvyJSON){
-			self.map = L.map('map').setView([41.8819, -87.6278], 15);
+			self.map = L.map('map', {
+				fullscreenControl: true
+			}).setView([41.8819, -87.6278], 15);
+
 
 			L.tileLayer('http://b.tile.cloudmade.com/22458d368bc748b899eaa829e55849e0/1913/256//{z}/{x}/{y}.png', {
 				attribution: '',
 				maxZoom: 18
+			}).addTo(self.map);
+
+			L.control.locate({
+				drawCircle: true,  // controls whether a circle is drawn that shows the uncertainty about the location
+				follow: true,  // follow the user's location
+				setView: true,
+				strings: {
+					title: "Find Me!"
+				}
 			}).addTo(self.map);
 
 			self.addStationMarkers(self, divvyJSON);
